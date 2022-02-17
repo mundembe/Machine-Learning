@@ -1,0 +1,83 @@
+FEATURES: 
+    Dependant variable
+    
+$ dataset.iloc[rows, columns].values --> part of Pandas lib
+    Don't forget the .values to specify that you only want 
+    to collect the values from the dataset object
+
+HANDLING MISSING DATA
+    1.Remove the cell with the missing data(won't affect the results of a large dataset)
+
+    2.Replace by the avarage.
+         Use SimpleImputer from sklearn.impute
+        
+A cell is defined as the code between two lines which start
+with the characters:
+     #%%, # %% or # <codecell>.
+
+It is easier for ML model to understand numbers(instead of strings).
+ But converting Names(String) into numbers may confuse the model(It may think that the 
+ numerical codes representing each string[ie country name] has an order or relationship). 
+ Use One-Hot-Encoding to avoid this misunderstanding
+
+Always split the dataset before applying feature  
+    this avoids infomation leakage
+    
+Feature Scaling
+    The Standardisation function sets the data's values between -3 and 3
+     works on all models (unlike Normalisation)
+    The fit function uses values from X_train to perform the Scaling function
+        use this scaler to transform  and X_test(don't fit onto the training set, only transform)
+            bcoz you can't create a scaler using X_test(since it test data and must be 'hidden' from the ML model)
+    No need to apply feature scaling to the dependant variable(y) since it takes binary values (ie: 1 or 0)
+        
+Multiple Linear Regression has features with more columns than the dependant variable(y)
+    hense the shapes are different (Can't be plotted on a 3D plot')
+    Therefore, just print y_test vs y_prediction side-by-side
+    
+Data set must comply with these factors for linear regression to be used:
+    Linearity
+    Homoscedastity
+    Multivariate Normality
+    Independance of error
+    Lack of Multicolinearity
+
+Dummy Variable
+    A dummy variable is a variable that takes values of 0 and 1, 
+    where the values indicate the presence or absence of something
+    
+Polynomial Linear regression is not a linear model
+    y = b0 + b1(X1) + b2(X1)^2 + b3(X1)^3 ... bn(X1)^n
+    First create a matrix of features containing X^1, X^2 ... X^n
+    PolynomialFeatures class creates a matrix of polynomial features
+        ie: X^1, X^2, X^3, X^n
+        it also creates a column of ones for our model, which helps compansete for B0'X^0'
+            which is the first term of the regression equation
+
+To plot a Higher Resolution Curve:
+    np.arange() returns a range of values(smoothness specified third arg step=0.1)
+    reshape this in a 2D array
+    pass this into your predict func, which goes as the 2nd arg of the plot func(representing y)
+
+Support Vector Regression equation doesn't compansate for feature Scaling
+    Therefore, perform feature scaling first
+    The dependant variable(y) has very large numbers, so apply feature Scaling here too
+        Reverse the feature scaling before you plot the results from the SVR model
+        Remember to transform y into a 2D array as is expected by the StandardScalar class
+    Do not use the Same StandardScalar object for both X and y
+        since X and y have different means etc
+    Prediction:
+        you can't predict the result without inversing the feature scaling using sc_y (the scalar for the DEPENDANT)
+        sc_y.inverse_transform(regressor.predict(sc_X.transform( [[6.5]] )))
+        note the input value is a 2D array
+    The SVR model is not good at catching Outliers
+
+Decision Tree Regression:
+    works best on higher dimensional datasets(i.e with multiple features)
+    no need for feature scaling
+
+Random Forest Regression
+    is an ensemble algorithm
+    meaning it trains the model using the avarage of random inputs from our dataset
+    set num of trees using the parameter n_estimators=10
+
